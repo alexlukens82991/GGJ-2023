@@ -11,6 +11,7 @@ public class DumbassEnemy : NetworkBehaviour
     [SerializeField] private NavMeshAgent navAgent;
     [SerializeField] private Transform bit;
     [SerializeField] private Collider enemyCollider;
+    [SerializeField] private GameObject rbTransform;
 
     private void Start()
     {
@@ -43,7 +44,8 @@ public class DumbassEnemy : NetworkBehaviour
         {
             Health -= 100;
         }
-
+        else
+            print("HIT, but not bullet?");
         if (Health <= 0)
         {
             // spawn bits
@@ -51,9 +53,18 @@ public class DumbassEnemy : NetworkBehaviour
             print("KILLING ENEMY: " + gameObject.name);
             enemyCollider.enabled = false;
             SpawnBitBundleServerRpc();
-
+            LocalKillAnimation();
         }
     }
+
+    private void LocalKillAnimation()
+    {
+        navAgent.enabled = false;
+        Rigidbody rb = rbTransform.AddComponent<Rigidbody>();
+        rb.AddTorque(new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), Random.Range(-3f, 3f)));
+        LukensUtils.LukensUtilities.DelayedFire(DespawnEnemyServerRpc, 3);
+    }
+
 
     [ServerRpc]
     public void SpawnBitBundleServerRpc()
@@ -71,8 +82,11 @@ public class DumbassEnemy : NetworkBehaviour
             Vector3 randomForce = new(Random.Range(-1, 1f), Random.Range(0.7f, 2), Random.Range(-1f, 1));
             foundObj.GetComponent<Rigidbody>().AddForce(randomForce, ForceMode.Impulse);
         }
+    }
 
+    [ServerRpc]
+    private void DespawnEnemyServerRpc()
+    {
         GetComponent<NetworkObject>().Despawn();
-        
     }
 }

@@ -13,7 +13,7 @@ public class TimedKill : NetworkBehaviour
 
     private void DestroySelfLocal()
     {
-
+        if (this == null) return;
         if (IsServer)
         {
             Destroy(gameObject);

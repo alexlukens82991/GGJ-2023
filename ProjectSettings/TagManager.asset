@@ -5,14 +5,15 @@ TagManager:
   serializedVersion: 2
   tags:
   - PlayerBullet
+  - DumbassEnemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - DumbassEnemy
   - Water
   - UI
-  - 
+  - Bits
   - 
   - 
   - 

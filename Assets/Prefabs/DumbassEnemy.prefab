@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4512133313540865157}
   - component: {fileID: 4512133313540865163}
   - component: {fileID: 4512133313540865156}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: DumbassEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,6 +76,7 @@ MonoBehaviour:
   navAgent: {fileID: 4512133313540865152}
   bit: {fileID: 1940482292466157699, guid: 8e281c23253005a4cbd1309994fbf13a, type: 3}
   enemyCollider: {fileID: 5983071241151660899}
+  rbTransform: {fileID: 4384790694358147494}
 --- !u!114 &4512133313540865158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,7 +134,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &4512133313540865156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,6 +233,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Shield_Hex_Low_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 7234262465894577439, guid: c813eb0a6c0840c458be880b5df092fc,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c813eb0a6c0840c458be880b5df092fc, type: 3}

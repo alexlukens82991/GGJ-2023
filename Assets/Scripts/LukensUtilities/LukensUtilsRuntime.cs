@@ -16,7 +16,7 @@ namespace LukensUtils
         {
             yield return new WaitForSeconds(time);
 
-            if (action.Target != null)
+            if (action != null)
                 action.Invoke();
         }
         

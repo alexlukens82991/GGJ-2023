@@ -27,7 +27,10 @@ public class PlayerItemSpawner : NetworkBehaviour
 
             spawnItemData.SetVelocity(veloDir);
 
-            NetworkSpawner.Instance.SpawnItemServerRpc(0, spawnItemData);
+            if (!IsServer)
+                NetworkSpawner.Instance.SpawnItemServerRpc(0, spawnItemData);
+            else
+                NetworkSpawner.Instance.SpawnItem(0, spawnItemData);
         }
 
 

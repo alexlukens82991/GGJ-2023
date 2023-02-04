@@ -30,6 +30,28 @@ public class NetworkSpawner : NetworkSingleton<NetworkSpawner>
             foundRb.AddForce(spawnItemData.GetVelocity(), ForceMode.Impulse);
         }
     }
+
+    public void SpawnItem(int itemInt, SpawnItemData spawnItemData)
+    {
+        if (itemInt >= m_SpawnableItems.Length)
+        {
+            Debug.LogError("ERROR SPAWNING ITEM: " + itemInt);
+        }
+
+        Transform newItem = Instantiate(m_SpawnableItems[itemInt]);
+        newItem.position = spawnItemData.GetPosition();
+        newItem.rotation = spawnItemData.GetRotation();
+
+        NetworkObject foundObj = newItem.GetComponent<NetworkObject>();
+        foundObj.Spawn();
+
+        if (spawnItemData._hasVelocity)
+        {
+            Rigidbody foundRb = newItem.GetComponent<Rigidbody>();
+
+            foundRb.AddForce(spawnItemData.GetVelocity(), ForceMode.Impulse);
+        }
+    }
 }
 
 public struct SpawnItemData : INetworkSerializable

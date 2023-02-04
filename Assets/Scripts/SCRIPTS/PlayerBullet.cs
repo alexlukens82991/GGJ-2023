@@ -8,14 +8,21 @@ public class PlayerBullet : NetworkBehaviour
     [SerializeField] private NetworkObject netObj;
     private void OnCollisionEnter(Collision collision)
     {
-        DespawnServerRpc();
-        //Destroy(gameObject);
+        if (!IsServer) return;
+        //StartCoroutine(EndOfFrameExecute());
+        Destroy(gameObject);
+    }
+
+    IEnumerator EndOfFrameExecute()
+    {
+        yield return new WaitUntil(() => netObj.IsSpawned);
+        netObj.Despawn();
     }
 
 
     [ServerRpc]
     private void DespawnServerRpc()
     {
-        netObj.Despawn(); 
+        
     }
 }
