@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -15,10 +16,11 @@ public class NetcodePlayer : NetworkBehaviour
     [SerializeField] private Transform spawnRoom;
     [SerializeField] private Transform spawnRoomPrefab;
     [SerializeField] private ulong roomID;
-    private int currentBits;
+    private BitCollector bitCollector;
 
     public override void OnNetworkSpawn()
     {
+        RegisterPlayerClientRpc();
         if (!IsOwner) return;
 
         // Initialize stats
@@ -30,6 +32,17 @@ public class NetcodePlayer : NetworkBehaviour
         // move new player to room
 
         // Update gamemanager
+    }
+    
+    [ClientRpc]
+    private void RegisterPlayerClientRpc()
+    {
+        GameManager.Instance.RegisterBitCount(OwnerClientId);
+    }
+
+    private void Start()
+    {
+        bitCollector = GetComponent<BitCollector>();
     }
 
     [ServerRpc]
@@ -83,7 +96,6 @@ public class NetcodePlayer : NetworkBehaviour
     {
         transform.position = spawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint();
         Debug.Log($"Moved player");
-        
-        GameManager.Instance.SetPlayerBits(NetworkManager.ConnectedClients[OwnerClientId], currentBits);
+        GameManager.Instance.SetPlayerBitsServerRpc(OwnerClientId, bitCollector.CurrentBits);
     }
 }

@@ -6,25 +6,24 @@ using UnityEngine;
 
 public class GameManager : NetworkSingleton<GameManager>
 {
-    private NetworkManager networkManager;
-
     private Dictionary<NetworkClient, int> bitsPerPlayer = new();
-    
-    private void Start()
+    [SerializeField] private int winningBits = 150;
+    private List<ulong> longList = new();
+
+    public void RegisterBitCount(ulong playerID)
     {
-        InitializeBitDictionary();
+        bitsPerPlayer.Add(NetworkManager.ConnectedClients[playerID], 0);
+        longList.Add(playerID); 
     }
 
-    private void InitializeBitDictionary()
+    [ServerRpc]
+    public void SetPlayerBitsServerRpc(ulong playerID, int numBits)
     {
-        foreach (var player in networkManager.ConnectedClients)
+        bitsPerPlayer[NetworkManager.ConnectedClients[playerID]] = numBits;
+
+        if (numBits >= winningBits)
         {
-            bitsPerPlayer.Add(player.Value, 0);
+            Debug.Log($"{NetworkManager.ConnectedClients[playerID]} wins!");
         }
-    }
-
-    public void SetPlayerBits(NetworkClient player, int numBits)
-    {
-        bitsPerPlayer[player] = numBits;
     }
 }
