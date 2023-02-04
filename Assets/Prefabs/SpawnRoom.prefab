@@ -477,6 +477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 4331063116092103871}
+  computer: {fileID: 4331063117252850401}
 --- !u!114 &4331063117618322592
 MonoBehaviour:
   m_ObjectHideFlags: 0

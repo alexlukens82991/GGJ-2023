@@ -3,15 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HackerComputer : Singleton<HackerComputer>
 {
     [SerializeField] private CanvasGroup cg;
-    [SerializeField] private Transform targetPlayer;
+    [SerializeField] private NetworkTransform targetPlayer;
     [SerializeField] private TextMeshProUGUI hackerTxt;
     [SerializeField] private ScrollRect scrollRect;
+    [SerializeField] private Transform spawnPointsParent;
+    [SerializeField] private Transform computer;
+    private List<Vector3> spawnPoints = new();
 
     string[] expanded;
     private int currIndex;
@@ -21,6 +25,11 @@ public class HackerComputer : Singleton<HackerComputer>
     {
         expanded = HACKER_TEXT.Split(' ');
         hackerTxt.text = "█";
+
+        foreach (Transform transform in spawnPointsParent)
+        {
+            spawnPoints.Add(transform.position);
+        }
     }
 
     private void Update()
@@ -31,6 +40,20 @@ public class HackerComputer : Singleton<HackerComputer>
         {
             Type();
         }
+
+        if (computer == null) return;
+
+        float dist = Vector3.Distance(targetPlayer.transform.position, computer.position);
+        if (Input.GetMouseButtonDown(0) && dist < 3)
+        {
+            OpenHackerText(true);
+        }
+    }
+
+    private void OpenHackerText(bool open)
+    {
+        print("OPEN HACKER TEXT: " + open);
+        LukensUtilities.ToggleCanvasGroup(cg, open);
     }
 
     private void Type()
@@ -51,11 +74,26 @@ public class HackerComputer : Singleton<HackerComputer>
     {
         print("HACK COMPLETE. SPAWNING PLAYER");
         hackComplete = true;
+
+        targetPlayer.SetState(spawnPoints[Random.Range(0, spawnPoints.Count)]); // coroutine for effects
+        OpenHackerText(false);
+
     }
 
-    public void SetTargetPlayer(Transform player)
+    public void SetTargetPlayer(NetworkTransform player)
     {
         targetPlayer = player;
+    }
+
+    public void SetComputer(Transform comp)
+    {
+        computer = comp;
+    }
+
+    public void ResetHackerText()
+    {
+        currIndex = 0;
+        hackerTxt.text = "█";
     }
 
     private const string HACKER_TEXT = "ACCESS DATABASE { DB239158-235f } identity: NONE \n\n PURGE CACHE; \n\n ECHO PING_RATE () => DISSCONNECT_OBSERVERS; " +

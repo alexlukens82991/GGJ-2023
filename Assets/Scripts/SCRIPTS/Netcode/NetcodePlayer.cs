@@ -71,7 +71,8 @@ public class NetcodePlayer : NetworkBehaviour
     {
         spawnRoom = NetworkManager.SpawnManager.SpawnedObjects[room].transform;
         networkTransform.SetState(spawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint());
-        HackerComputer.Instance.SetTargetPlayer(transform);
+        HackerComputer.Instance.SetTargetPlayer(networkTransform);
+        HackerComputer.Instance.SetComputer(spawnRoom.GetComponent<SpawnRoom>().GetComputer());
     }
 
 }
