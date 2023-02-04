@@ -26,7 +26,6 @@ public class NetcodePlayer : NetworkBehaviour
 
         // move new player to room
 
-
         // Update gamemanager
     }
 

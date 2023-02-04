@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class DumbassEnemy : MonoBehaviour
+public class DumbassEnemy : NetworkBehaviour
 {
-    public int Health;
+    public int Health = 100;
 
     [SerializeField] private NavMeshAgent navAgent;
+    [SerializeField] private Transform bit;
 
     private void Start()
     {
@@ -33,9 +35,9 @@ public class DumbassEnemy : MonoBehaviour
         } while (true);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision col)
     {
-        if (other.tag.Equals("PlayerBullet"))
+        if (col.collider.tag.Equals("PlayerBullet"))
         {
             Health -= 25;
         }
@@ -44,6 +46,23 @@ public class DumbassEnemy : MonoBehaviour
         {
             // spawn bits
             // kill
+            print("KILLING ENEMY: " + gameObject.name);
+            SpawnBitBundleServerRpc();
         }
+    }
+
+    [ServerRpc]
+    public void SpawnBitBundleServerRpc()
+    {
+        print("SERVER SPAWN BITS FIRED!");
+        for (int i = 0; i < 24; i++)
+        {
+            Transform newItem = Instantiate(bit);
+            newItem.position = transform.position;
+
+            NetworkObject foundObj = newItem.GetComponent<NetworkObject>();
+            foundObj.Spawn();
+        }
+        
     }
 }
