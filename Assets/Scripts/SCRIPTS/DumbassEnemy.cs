@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class DumbassEnemy : MonoBehaviour
 {
+    public int Health;
+
     [SerializeField] private NavMeshAgent navAgent;
 
     private void Start()
@@ -29,6 +31,19 @@ public class DumbassEnemy : MonoBehaviour
 
             yield return new WaitForSeconds(Random.Range(3f, 9f));
         } while (true);
-        
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag.Equals("PlayerBullet"))
+        {
+            Health -= 25;
+        }
+
+        if (Health <= 0)
+        {
+            // spawn bits
+            // kill
+        }
     }
 }
