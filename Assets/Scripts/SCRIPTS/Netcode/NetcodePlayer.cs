@@ -15,6 +15,8 @@ public class NetcodePlayer : NetworkBehaviour
     [SerializeField] private Transform spawnRoom;
     [SerializeField] private Transform spawnRoomPrefab;
     [SerializeField] private ulong roomID;
+    private int currentBits;
+
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
@@ -62,7 +64,6 @@ public class NetcodePlayer : NetworkBehaviour
         ReturnRoomToClientClientRpc(roomID, clientRpcParams);
     }
 
-
     [ClientRpc]
     private void ReturnRoomToClientClientRpc(ulong room, ClientRpcParams clientRpcParams)
     {
@@ -76,7 +77,13 @@ public class NetcodePlayer : NetworkBehaviour
         HackerComputer.Instance.SetTargetPlayer(networkTransform);
         HackerComputer.Instance.SetComputer(spawnRoom.GetComponent<SpawnRoom>().GetComputer());
     }
-
-
-
+    
+    [ClientRpc]
+    public void MoveBackToRoomClientRpc()
+    {
+        transform.position = spawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint();
+        Debug.Log($"Moved player");
+        
+        GameManager.Instance.SetPlayerBits(NetworkManager.ConnectedClients[OwnerClientId], currentBits);
+    }
 }
