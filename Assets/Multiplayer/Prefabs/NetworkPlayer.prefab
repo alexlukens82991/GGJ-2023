@@ -397,6 +397,7 @@ MonoBehaviour:
   canRun: 1
   runSpeed: 9
   runningKey: 304
+  animator: {fileID: 4078579306627466050}
 --- !u!114 &3932017616517677470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,7 +536,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad8deae8091111f4eb30a56c1f4e0d3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TransitionStateInfoList: []
+  TransitionStateInfoList:
+  - Layer: 0
+    OriginatingState: 868645711
+    DestinationState: 166083222
+    TransitionDuration: 0.25
+    TriggerNameHash: 2081823275
+    TransitionIndex: 0
+  - Layer: 0
+    OriginatingState: 166083222
+    DestinationState: 868645711
+    TransitionDuration: 0.25
+    TriggerNameHash: 1748754976
+    TransitionIndex: 0
   m_Animator: {fileID: 4078579306627466050}
 --- !u!1 &3963796010505916622
 GameObject:
@@ -1810,7 +1823,7 @@ Animator:
   m_GameObject: {fileID: 722741969483704520}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f0c7fb282e4adb741a6125a4964dd5a4, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

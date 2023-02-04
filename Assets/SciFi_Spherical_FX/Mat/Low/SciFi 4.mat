@@ -23,7 +23,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BackFace_Diffuse_map:
-        m_Texture: {fileID: 2800000, guid: e6042d60a743b1145b5ea4a614f4aa98, type: 3}
+        m_Texture: {fileID: 2800000, guid: 76f5071fef6d4634699c3d22ad4fef6c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BackTex:
@@ -59,7 +59,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FrontFace_Diffuse_map:
-        m_Texture: {fileID: 2800000, guid: 86fd02bbbfa0d014cbe155852e2fe672, type: 3}
+        m_Texture: {fileID: 2800000, guid: e6042d60a743b1145b5ea4a614f4aa98, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -99,7 +99,7 @@ Material:
     - _GradientMap: 1
     - _Metallic: 0
     - _Mode: 0
-    - _NormalPush: 0.17
+    - _NormalPush: 0.533
     - _OcclusionStrength: 1
     - _Outline_Opacity: 8
     - _Parallax: 0.02
