@@ -10,10 +10,12 @@ public class DumbassEnemy : NetworkBehaviour
 
     [SerializeField] private NavMeshAgent navAgent;
     [SerializeField] private Transform bit;
+    [SerializeField] private Collider enemyCollider;
 
     private void Start()
     {
         StartCoroutine(RoamRoutine());
+        Health = 100;
     }
 
     private IEnumerator RoamRoutine()
@@ -37,9 +39,10 @@ public class DumbassEnemy : NetworkBehaviour
 
     private void OnCollisionEnter(Collision col)
     {
+        print("HIT DETECTED: " + col.gameObject.name);
         if (col.collider.tag.Equals("PlayerBullet"))
         {
-            Health -= 25;
+            Health -= 100;
         }
 
         if (Health <= 0)
@@ -47,22 +50,30 @@ public class DumbassEnemy : NetworkBehaviour
             // spawn bits
             // kill
             print("KILLING ENEMY: " + gameObject.name);
+            enemyCollider.enabled = false;
             SpawnBitBundleServerRpc();
+
         }
     }
 
     [ServerRpc]
     public void SpawnBitBundleServerRpc()
     {
+        Vector3 spawnPoint = transform.position + (Vector3.up * 2);
         print("SERVER SPAWN BITS FIRED!");
-        for (int i = 0; i < 24; i++)
+        for (int i = -6; i < Random.Range(2, 6); i++)
         {
             Transform newItem = Instantiate(bit);
-            newItem.position = transform.position;
+            newItem.position = spawnPoint + ((i * Vector3.right) * 0.2f);
 
             NetworkObject foundObj = newItem.GetComponent<NetworkObject>();
             foundObj.Spawn();
+
+            Vector3 randomForce = new(Random.Range(-1, 1f), Random.Range(0.7f, 2), Random.Range(-1f, 1));
+            foundObj.GetComponent<Rigidbody>().AddForce(randomForce, ForceMode.Impulse);
         }
+
+        GetComponent<NetworkObject>().Despawn();
         
     }
 }

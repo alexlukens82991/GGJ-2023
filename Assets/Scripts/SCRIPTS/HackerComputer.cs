@@ -36,6 +36,9 @@ public class HackerComputer : Singleton<HackerComputer>
     {
         if (hackComplete) return;
 
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            TriggerHackSuccess();
+
         if (Input.anyKeyDown && cg.interactable)
         {
             Type();
