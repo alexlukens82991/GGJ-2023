@@ -13,6 +13,6 @@ public class RootPortal : NetworkBehaviour
 
         if (player == null) return;
         Debug.Log($"Player Collided");
-        player.MoveBackToRoomClientRpc();
+        player.MoveBackToRoom();
     }
 }

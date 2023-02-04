@@ -91,11 +91,11 @@ public class NetcodePlayer : NetworkBehaviour
         HackerComputer.Instance.SetComputer(spawnRoom.GetComponent<SpawnRoom>().GetComputer());
     }
     
-    [ClientRpc]
-    public void MoveBackToRoomClientRpc()
+
+    public void MoveBackToRoom()
     {
         transform.position = spawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint();
         Debug.Log($"Moved player");
-        GameManager.Instance.SetPlayerBitsServerRpc(OwnerClientId, bitCollector.CurrentBits);
+        GameManager.Instance.SetPlayerBitsServerRpc(bitCollector.CurrentBits);
     }
 }
