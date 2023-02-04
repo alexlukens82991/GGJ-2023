@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerBullet : MonoBehaviour
+public class PlayerBullet : NetworkBehaviour
 {
     [SerializeField] private NetworkObject netObj;
     private void OnCollisionEnter(Collision collision)
@@ -16,6 +16,6 @@ public class PlayerBullet : MonoBehaviour
     [ServerRpc]
     private void DespawnServerRpc()
     {
-        netObj.Despawn();
+        netObj.Despawn(); 
     }
 }
