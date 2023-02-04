@@ -12,6 +12,7 @@ public class DumbassEnemy : NetworkBehaviour
     [SerializeField] private Transform bit;
     [SerializeField] private Collider enemyCollider;
     [SerializeField] private GameObject rbTransform;
+    private bool Alive = true;
 
     private void Start()
     {
@@ -35,7 +36,7 @@ public class DumbassEnemy : NetworkBehaviour
             navAgent.SetDestination(finalPosition);
 
             yield return new WaitForSeconds(Random.Range(3f, 9f));
-        } while (true);
+        } while (Alive);
     }
 
     private void OnCollisionEnter(Collision col)
@@ -54,6 +55,7 @@ public class DumbassEnemy : NetworkBehaviour
             enemyCollider.enabled = false;
             SpawnBitBundleServerRpc();
             LocalKillAnimation();
+            Alive = false;
         }
     }
 
@@ -61,7 +63,7 @@ public class DumbassEnemy : NetworkBehaviour
     {
         navAgent.enabled = false;
         Rigidbody rb = rbTransform.AddComponent<Rigidbody>();
-        rb.AddTorque(new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), Random.Range(-3f, 3f)));
+        rb.AddTorque(new Vector3(Random.Range(-10f, 10f), Random.Range(-10f, 10f), Random.Range(-10f, 10f)), ForceMode.Impulse);
         LukensUtils.LukensUtilities.DelayedFire(DespawnEnemyServerRpc, 3);
     }
 
