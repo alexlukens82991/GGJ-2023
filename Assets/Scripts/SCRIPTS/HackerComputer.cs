@@ -55,7 +55,6 @@ public class HackerComputer : Singleton<HackerComputer>
 
     private void OpenHackerText(bool open)
     {
-        print("OPEN HACKER TEXT: " + open);
         LukensUtilities.ToggleCanvasGroup(cg, open);
     }
 
@@ -75,12 +74,10 @@ public class HackerComputer : Singleton<HackerComputer>
 
     private void TriggerHackSuccess()
     {
-        print("HACK COMPLETE. SPAWNING PLAYER");
         hackComplete = true;
 
         targetPlayer.SetState(spawnPoints[Random.Range(0, spawnPoints.Count)]); // coroutine for effects
         OpenHackerText(false);
-
     }
 
     public void SetTargetPlayer(NetworkTransform player)

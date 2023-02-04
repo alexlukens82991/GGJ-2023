@@ -39,7 +39,6 @@ public class DumbassEnemy : NetworkBehaviour
 
     private void OnCollisionEnter(Collision col)
     {
-        print("HIT DETECTED: " + col.gameObject.name);
         if (col.collider.tag.Equals("PlayerBullet"))
         {
             Health -= 100;

@@ -75,7 +75,7 @@ MonoBehaviour:
   Health: 0
   navAgent: {fileID: 4512133313540865152}
   bit: {fileID: 1940482292466157699, guid: 8e281c23253005a4cbd1309994fbf13a, type: 3}
-  enemyCollider: {fileID: 0}
+  enemyCollider: {fileID: 5983071241151660899}
 --- !u!114 &4512133313540865158
 MonoBehaviour:
   m_ObjectHideFlags: 0
