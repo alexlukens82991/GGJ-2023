@@ -26,9 +26,17 @@ public class NetcodePlayer : NetworkBehaviour
     private BitCollector bitCollector;
     private static int playersConnected;
 
+    private void OnEnable()
+    {
+        if (IsServer || IsHost)
+        {
+            OnNetworkSpawn();
+        }
+    }
+    
     public override void OnNetworkSpawn()
     {
-        //PlayerNumber = NetworkManager.ConnectedClients[OwnerClientId].ClientId;
+        Debug.Log($"Spawned player {OwnerClientId}");
         RegisterPlayerClientRpc(OwnerClientId);
 
         if (IsHost)
@@ -78,9 +86,7 @@ public class NetcodePlayer : NetworkBehaviour
     private void RegisterPlayerClientRpc(ulong id)
     {
         GameManager.Instance.UpdatePlayerCount();
-
         GameManager.Instance.RegisterBitCount(OwnerClientId);
-        GameManager.Instance.RegisterStatsUI(OwnerClientId);
         Debug.Log($"Registered player");
     }
 
@@ -115,13 +121,19 @@ public class NetcodePlayer : NetworkBehaviour
         }
     }
 
-
     private void Start()
     {
         bitCollector = GetComponent<BitCollector>();
         NetworkManager.OnClientConnectedCallback += OnClientConnect;
+        StartCoroutine(LateStart());
     }
 
+    IEnumerator LateStart()
+    {
+        yield return new WaitForSeconds(2f);
+        GameManager.Instance.RegisterStatsUIServerRpc(OwnerClientId);
+    }
+    
     [ServerRpc]
     public void SpawnRoomServerRpc(ulong id)
     {
