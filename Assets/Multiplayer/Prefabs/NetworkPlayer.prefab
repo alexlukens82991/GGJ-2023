@@ -336,7 +336,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3950130015190899067}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.507, y: 0.95, z: 1.398}
+  m_LocalPosition: {x: 0.532, y: 0.743, z: 0.846}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -559,6 +559,9 @@ MonoBehaviour:
   Health: 0
   Bits: 0
   GunHeat: 0
+  PlayerNumber: 0
+  RoomId:
+    m_InternalValue: 0
   models:
   - {fileID: 722741969483704520}
   - {fileID: 4359468751004830384}
@@ -567,10 +570,10 @@ MonoBehaviour:
   firstPersonMovement: {fileID: 3936142231387866214}
   networkAnimator: {fileID: 5585303532638091988}
   networkTransform: {fileID: 2110109574144668551}
-  spawnRoom: {fileID: 0}
   spawnRoomPrefab: {fileID: 4331063117618322594, guid: 7e9afb82046aca64187d5a2cdd0ba429,
     type: 3}
   roomID: 0
+  SpawnRoom: {fileID: 0}
 --- !u!95 &2042157747650421776
 Animator:
   serializedVersion: 5

@@ -5912,6 +5912,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 495196977, guid: 0863621bc36f7024a95f1605fd3cd3df, type: 3}
+      propertyPath: Loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 495196977, guid: 0863621bc36f7024a95f1605fd3cd3df, type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6071296857319585888, guid: 0863621bc36f7024a95f1605fd3cd3df,
         type: 3}
       propertyPath: m_RootOrder
@@ -5993,6 +6001,11 @@ PrefabInstance:
     - target: {fileID: 8247224512204279530, guid: 73147ff2991094c4e81d7404e196130f,
         type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8247224512204279530, guid: 73147ff2991094c4e81d7404e196130f,
+        type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8247224512329259758, guid: 73147ff2991094c4e81d7404e196130f,

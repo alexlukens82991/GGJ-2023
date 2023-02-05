@@ -10,7 +10,7 @@ public class BitCollector : NetworkBehaviour
         if (other.tag.Equals("Bit"))
         {
             CurrentBits++;
-
+            SoundBank.Instance.PlayOneShot(2);
             NetworkObject bit = other.gameObject.GetComponent<NetworkObject>();
             DespawnBitServerRpc(bit.NetworkObjectId);
         }

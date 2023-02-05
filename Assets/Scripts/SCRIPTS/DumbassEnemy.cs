@@ -42,10 +42,13 @@ public class DumbassEnemy : NetworkBehaviour
     public void Damage()
     {
         print("DAMAGED ENEMY");
+
         Health -= 50;
 
         if (Health <= 0)
         {
+            SoundBank.Instance.PlayOneShot(4);
+
             // spawn bits
             // kill
             print("KILLING ENEMY: " + gameObject.name);
@@ -53,6 +56,10 @@ public class DumbassEnemy : NetworkBehaviour
             SpawnBitBundleServerRpc();
             LocalKillAnimation();
             Alive = false;
+        }
+        else
+        {
+            SoundBank.Instance.PlayOneShot(3);
         }
     }
 

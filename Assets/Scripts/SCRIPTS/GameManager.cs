@@ -100,8 +100,9 @@ public class GameManager : NetworkSingleton<GameManager>
     private void ClientStartGameClientRpc(ClientRpcParams clientRpcParams = default)
     {
         OnGameStart?.Invoke();
+        SoundBank.Instance.PlayBattleMusic(true);
     }
-    
+
     private IEnumerator RestartGame()
     {
         yield return new WaitForSeconds(2f);

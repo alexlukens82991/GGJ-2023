@@ -259,11 +259,16 @@ public class NetcodePlayer : NetworkBehaviour
         Health -= 15;
         if (Health <= 0)
         {
+            SoundBank.Instance.PlayOneShot(6);
+
             // spawn bits
             // kill
             Bits = 0;
             MoveBackToRoom();
         }
+        else
+            SoundBank.Instance.PlayOneShot(5);
+
     }
 
     //private void OnCollisionEnter(Collision col)
