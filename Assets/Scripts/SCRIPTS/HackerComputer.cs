@@ -18,6 +18,7 @@ public class HackerComputer : Singleton<HackerComputer>
     [SerializeField] private Transform spawnPointsParent;
     [SerializeField] private Transform computer;
     private List<Vector3> spawnPoints = new();
+    [SerializeField] private Animator animator;
 
     string[] expanded;
     private int currIndex;
@@ -99,8 +100,16 @@ public class HackerComputer : Singleton<HackerComputer>
     {
         HackComplete = true;
 
-        targetPlayer.SetState(spawnPoints[Random.Range(0, spawnPoints.Count)]); // coroutine for effects
+        StartCoroutine(SendToBattleFieldRoutine());
+    }
+
+    IEnumerator SendToBattleFieldRoutine()
+    {
+        animator.SetTrigger("Trigger");
+        yield return new WaitForSeconds(2.5f);
         OpenHackerText(false);
+        targetPlayer.SetState(spawnPoints[Random.Range(0, spawnPoints.Count)]); // coroutine for effects
+
     }
 
     public void SetTargetPlayer(NetworkTransform player)

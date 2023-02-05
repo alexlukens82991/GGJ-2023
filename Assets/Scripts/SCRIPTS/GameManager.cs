@@ -93,6 +93,7 @@ public class GameManager : NetworkSingleton<GameManager>
     {
         ClientStartGameClientRpc();
         hostStartGameBtn.gameObject.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     [ClientRpc]
