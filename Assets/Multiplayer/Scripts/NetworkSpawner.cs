@@ -9,7 +9,7 @@ public class NetworkSpawner : NetworkSingleton<NetworkSpawner>
     [SerializeField] private Transform[] m_SpawnableItems;
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnItemServerRpc(int itemInt, SpawnItemData spawnItemData)
+    public void SpawnItemServerRpc(int itemInt, SpawnItemData spawnItemData, ulong id = 12345)
     {
         if (itemInt >= m_SpawnableItems.Length)
         {
@@ -26,8 +26,16 @@ public class NetworkSpawner : NetworkSingleton<NetworkSpawner>
         if (spawnItemData._hasVelocity)
         {
             Rigidbody foundRb = newItem.GetComponent<Rigidbody>();
-
             foundRb.AddForce(spawnItemData.GetVelocity(), ForceMode.Impulse);
+        }
+
+
+        if (id != 12345)
+        {
+            // bullet, player
+            NetworkClient requestingClient = NetworkManager.ConnectedClients[id];
+
+            Physics.IgnoreCollision(requestingClient.PlayerObject.GetComponent<Collider>(), newItem.GetComponentInChildren<Collider>());
         }
     }
 
