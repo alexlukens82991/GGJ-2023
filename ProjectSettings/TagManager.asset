@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerBullet
   - DumbassEnemy
+  - Bit
   layers:
   - Default
   - TransparentFX
