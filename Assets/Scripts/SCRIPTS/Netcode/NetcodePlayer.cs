@@ -38,10 +38,6 @@ public class NetcodePlayer : NetworkBehaviour
 
         // Spawn in new player room
         SpawnRoomServerRpc(OwnerClientId);
-
-        
-
-
     }
 
     private void OnClientConnect(ulong id)

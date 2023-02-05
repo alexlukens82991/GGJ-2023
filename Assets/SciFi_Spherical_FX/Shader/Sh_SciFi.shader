@@ -14,7 +14,7 @@ Shader "Shader_SciFi/SciFi"
 		_BackFace_Intensity("Intensity Mult :", range (0,4.00)) = 1.00
 		///////
 		_OutlineTex("Outline Map", 2D) = "black" {}
-		_Outline_Color ("Outline Color Mult :", Color) = (1,1,1,0)
+		[HDR] _Outline_Color ("Outline Color Mult :", Color) = (1,1,1,0)
 		_Outline_Opacity("Outline Opacity :", range (0,100.00)) = 50
 		///////
 		_NormalPush("Normal Push :", range (-1.00,1.00)) = 1.00
