@@ -39,7 +39,7 @@ public class NetcodePlayer : NetworkBehaviour
         // Initialize stats
         Health = 100;
 
-        StartCoroutine(FuckingJustWait());
+        StartCoroutine(UpdateRoomRefForAll());
 
 
         // Spawn in new player room
@@ -66,10 +66,11 @@ public class NetcodePlayer : NetworkBehaviour
 
     IEnumerator FuckingJustWait()
     {
-        print("WAITING!!!!");
-        yield return new WaitForSeconds(2);
-        print("FIRING UPDATE");
-        UpdateRoomRef();
+        do
+        {
+            UpdateTheFuckingRoom();
+            yield return new WaitForSeconds(1);
+        } while (SpawnRoom == null);
     }
 
 
@@ -165,28 +166,38 @@ public class NetcodePlayer : NetworkBehaviour
         SelectModel();
     }
 
-    private void UpdateRoomRef()
+    private IEnumerator UpdateRoomRefForAll()
     {
+        bool playersAreSet;
 
-        GameObject[] foundPlayers = GameObject.FindGameObjectsWithTag("Player");
-
-        foreach (GameObject player in foundPlayers)
+        do
         {
-            NetcodePlayer netPlayer = player.GetComponent<NetcodePlayer>();
+            playersAreSet = true;
+            GameObject[] foundPlayers = GameObject.FindGameObjectsWithTag("Player");
 
-            if (netPlayer == null)
-                continue;
+            foreach (GameObject player in foundPlayers)
+            {
+                NetcodePlayer netPlayer = player.GetComponent<NetcodePlayer>();
 
-            netPlayer.UpdateTheFuckingRoom();
+                if (netPlayer == null)
+                    continue;
 
-
-        }
-        print("UPDATING ROOM REF");
+                netPlayer.UpdateTheFuckingRoom();
+                if (netPlayer.SpawnRoom == null)
+                    playersAreSet = false;
+            }
+            print("UPDATING ROOM REF");
+            yield return new WaitForSeconds(1);
+        } while (!playersAreSet);
+       
         
     }
 
     public void UpdateTheFuckingRoom()
     {
+        if (RoomId.Value == 0) return;
+        print("ATTEMPTING TO UPDATE ROOM.");
+        print("Room status: " + SpawnRoom == null);
         NetworkObject netObj = NetworkManager.SpawnManager.SpawnedObjects[RoomId.Value];
         SpawnRoom = netObj.transform;
     }
