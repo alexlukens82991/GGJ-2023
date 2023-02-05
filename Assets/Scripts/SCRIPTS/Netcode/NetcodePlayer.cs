@@ -36,6 +36,11 @@ public class NetcodePlayer : NetworkBehaviour
     
     public override void OnNetworkSpawn()
     {
+        if (!IsHost)
+        {
+            var playerList = GameObject.FindObjectsOfType<NetcodePlayer>();
+            
+        }
         Debug.Log($"Spawned player {OwnerClientId}");
         RegisterPlayerClientRpc(OwnerClientId);
 
@@ -120,7 +125,7 @@ public class NetcodePlayer : NetworkBehaviour
             player.tag = "Player_" + player.GetComponent<NetcodePlayer>().OwnerClientId;
         }
     }
-
+    
     private void Start()
     {
         bitCollector = GetComponent<BitCollector>();
@@ -131,7 +136,7 @@ public class NetcodePlayer : NetworkBehaviour
     IEnumerator LateStart()
     {
         yield return new WaitForSeconds(2f);
-        GameManager.Instance.RegisterStatsUIServerRpc(OwnerClientId);
+        GameManager.Instance.RegisterStatsUIClientRpc(OwnerClientId);
     }
     
     [ServerRpc]

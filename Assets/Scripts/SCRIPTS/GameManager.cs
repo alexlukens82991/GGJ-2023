@@ -39,17 +39,16 @@ public class GameManager : NetworkSingleton<GameManager>
         bitsPerPlayer.Add(playerID, new NetworkVariable<int>(0));
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void RegisterStatsUIServerRpc(ulong playerID)
+    [ClientRpc]
+    public void RegisterStatsUIClientRpc(ulong playerID)
     {
-        Debug.Log("FIRING UI INSTANTI");
         Transform statPrefab = Instantiate(m_playerStatPrefab, m_playerStatsPanel);
         m_statsPerPlayer.Add(playerID, statPrefab.GetComponent<PlayerStatPrefab>());
         string name = $"Player {playerID + 1}";
         statPrefab.GetComponent<PlayerStatPrefab>().SetName(name);
 
         newObj = statPrefab.GetComponent<NetworkObject>();
-        newObj.Spawn();
+        //newObj.Spawn();
     }
 
     [ServerRpc(RequireOwnership = false)]
