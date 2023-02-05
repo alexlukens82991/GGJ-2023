@@ -35,7 +35,7 @@ public class NetworkSpawner : NetworkSingleton<NetworkSpawner>
             // bullet, player
             NetworkClient requestingClient = NetworkManager.ConnectedClients[id];
 
-            Physics.IgnoreCollision(requestingClient.PlayerObject.GetComponent<Collider>(), newItem.GetComponentInChildren<Collider>());
+            Physics.IgnoreCollision(requestingClient.PlayerObject.gameObject.GetComponent<Collider>(), newItem.GetComponent<Collider>());
         }
     }
 
