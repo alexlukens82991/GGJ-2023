@@ -16,8 +16,6 @@ public class FirstPersonMovement : NetworkBehaviour
     /// <summary> Functions to override movement speed. Will use the last added override. </summary>
     public List<System.Func<float>> speedOverrides = new List<System.Func<float>>();
 
-
-
     void Awake()
     {
         // Get the rigidbody on this.

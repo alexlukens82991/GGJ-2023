@@ -1,19 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
 public class GameManager : NetworkSingleton<GameManager>
 {
-    private Dictionary<ulong, int> bitsPerPlayer = new();
+    public static event Action OnGameEnd;
     [SerializeField] private int winningBits = 150;
-    private List<ulong> longList = new();
-
+    [SerializeField] private GameObject playerWinPanel;
+    [SerializeField] private TMP_Text  playerWinText;
+    [SerializeField] private PauseManager pauseManager;
+    
+    private Dictionary<ulong, int> bitsPerPlayer = new();
+    
     public void RegisterBitCount(ulong playerID)
     {
         bitsPerPlayer.Add(playerID, 0);
-        longList.Add(playerID); 
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -30,6 +34,16 @@ public class GameManager : NetworkSingleton<GameManager>
     [ClientRpc]
     public void NotifyClientsOfWinClientRpc(ulong id)
     {
-        Debug.Log($"{id} wins!");
+        playerWinText.text = $"Player {id} wins!";
+        playerWinPanel.SetActive(true);
+        pauseManager.Pause();
+        OnGameEnd?.Invoke();
+        //StartCoroutine(RestartGame());
+    }
+
+    private IEnumerator RestartGame()
+    {
+        yield return new WaitForSeconds(5f);
+        
     }
 }

@@ -869,11 +869,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 5f251e89-9e4d-4af7-98c3-f0b23665364f
+  cloudProjectId: 7492f125-d20e-47c5-80be-304ce2bc2edd
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: GGJ-2023
-  organizationId: lukensdev
+  projectName: GGJ-2023 (1)
+  organizationId: plot-armor-studios
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 
