@@ -29,15 +29,30 @@ public class NetworkSpawner : NetworkSingleton<NetworkSpawner>
             foundRb.AddForce(spawnItemData.GetVelocity(), ForceMode.Impulse);
         }
 
-
-        if (id != 12345)
+        if (itemInt == 0)
         {
-            // bullet, player
-            NetworkClient requestingClient = NetworkManager.ConnectedClients[id];
-
-            Physics.IgnoreCollision(requestingClient.PlayerObject.gameObject.GetComponent<Collider>(), newItem.GetComponent<Collider>());
+            print("SETTING BULLET TAG " + "PlayerBullet_" + id);
+            newItem.tag = "PlayerBullet_" + id;
+            UpdateBulletTagClientRpc(foundObj.NetworkObjectId, id);
         }
+
+        //if (id != 12345)
+        //{
+        //    // bullet, player
+        //    NetworkClient requestingClient = NetworkManager.ConnectedClients[id];
+
+        //    Physics.IgnoreCollision(requestingClient.PlayerObject.gameObject.GetComponent<Collider>(), newItem.GetComponent<Collider>());
+        //}
     }
+
+    [ClientRpc]
+    private void UpdateBulletTagClientRpc(ulong bulletId, ulong clientId)
+    {
+        NetworkObject netObj = NetworkManager.SpawnManager.SpawnedObjects[bulletId];
+
+        netObj.tag = "PlayerBullet_" + clientId; ;
+    }
+
 
     public void SpawnItem(int itemInt, SpawnItemData spawnItemData)
     {

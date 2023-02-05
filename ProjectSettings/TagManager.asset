@@ -7,6 +7,26 @@ TagManager:
   - PlayerBullet
   - DumbassEnemy
   - Bit
+  - Player_0
+  - Player_1
+  - Player_2
+  - Player_3
+  - Player_4
+  - Player_5
+  - Player_6
+  - Player_7
+  - Player_8
+  - Player_9
+  - PlayerBullet_0
+  - PlayerBullet_1
+  - PlayerBullet_2
+  - PlayerBullet_3
+  - PlayerBullet_4
+  - PlayerBullet_5
+  - PlayerBullet_6
+  - PlayerBullet_7
+  - PlayerBullet_8
+  - PlayerBullet_9
   layers:
   - Default
   - TransparentFX
