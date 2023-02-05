@@ -24,8 +24,17 @@ public class HackerComputer : Singleton<HackerComputer>
     public bool HackComplete;
     private bool gameActive;
 
-    private void OnEnable() => GameManager.OnGameStart += HandleActivateComputer;
-    private void OnDisable() => GameManager.OnGameStart -= HandleActivateComputer;
+    private void OnEnable()
+    {
+        GameManager.OnGameStart += HandleActivateComputer;
+        GameManager.OnGameRestart += HandleDeactivateComputer;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnGameStart -= HandleActivateComputer;
+        GameManager.OnGameRestart -= HandleDeactivateComputer;
+    }
 
     private void Start()
     {
@@ -107,6 +116,11 @@ public class HackerComputer : Singleton<HackerComputer>
     private void HandleActivateComputer()
     {
         gameActive = true;
+    }
+
+    private void HandleDeactivateComputer()
+    {
+        gameActive = false;
     }
     
     public void ResetHackerText()

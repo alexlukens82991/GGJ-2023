@@ -10,6 +10,7 @@ public class GameManager : NetworkSingleton<GameManager>
 {
     public static event Action OnGameEnd;
     public static event Action OnGameStart;
+    public static event Action OnGameRestart;
 
     [SerializeField] private int winningBits = 150;
     [SerializeField] private GameObject playerWinPanel;
@@ -46,11 +47,10 @@ public class GameManager : NetworkSingleton<GameManager>
     [ClientRpc]
     public void NotifyClientsOfWinClientRpc(ulong id)
     {
-        playerWinText.text = $"Player {id} wins!";
+        playerWinText.text = $"Player {id + 1} wins!";
         playerWinPanel.SetActive(true);
-        pauseManager.Pause();
         OnGameEnd?.Invoke();
-        //StartCoroutine(RestartGame());
+        StartCoroutine(RestartGame());
     }
 
     private void CheckIfCanStartGame()
@@ -88,9 +88,36 @@ public class GameManager : NetworkSingleton<GameManager>
     
     private IEnumerator RestartGame()
     {
-        yield return new WaitForSeconds(5f);
+        Debug.Log("CALLING COROUTINE");
+        yield return new WaitForSeconds(2f);
+        ResetGamePlayServerRpc();
     }
 
+    [ServerRpc]
+    private void ResetGamePlayServerRpc(ServerRpcParams serverRpcParams = default)
+    {
+        Debug.Log("CALLING RESTART SERVER RPC");
+        
+        foreach (var client in NetworkManager.ConnectedClients)
+        {
+            var spawnPoint = client.Value.PlayerObject.GetComponent<NetcodePlayer>().SpawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint();
+            client.Value.PlayerObject.GetComponent<NetcodePlayer>().SetTransform(spawnPoint);
+        }
+        
+        CheckIfCanStartGame();
+        FullResetClientRpc();
+    }
+
+    [ClientRpc]
+    private void FullResetClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        Debug.Log("CALLING RESTART CLIENT RPC");
+        HackerComputer.Instance.Reset();
+        pauseManager.Resume();
+        OnGameRestart?.Invoke();
+        playerWinPanel.SetActive(false);
+    }
+    
     public void UpdatePlayerCount()
     {
         playerCount++;
