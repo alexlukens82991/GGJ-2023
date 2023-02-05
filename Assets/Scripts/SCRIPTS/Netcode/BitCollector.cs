@@ -12,6 +12,7 @@ public class BitCollector : NetworkBehaviour
             CurrentBits++;
 
             NetworkObject bit = other.gameObject.GetComponent<NetworkObject>();
+            GameManager.Instance.SetPlayerBitsServerRpc(CurrentBits);
             DespawnBitServerRpc(bit.NetworkObjectId);
         }
         

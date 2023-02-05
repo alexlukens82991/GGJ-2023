@@ -21,11 +21,12 @@ public class GameManager : NetworkSingleton<GameManager>
     [SerializeField] private Button hostStartGameBtn;
 
     [SerializeField] private RectTransform m_playerStatsPanel;
-    [SerializeField] private PlayerStatPrefab m_playerStatPrefab;
+    [SerializeField] private Transform m_playerStatPrefab;
 
     private Dictionary<ulong, PlayerStatPrefab> m_statsPerPlayer = new();
     private Dictionary<ulong, NetworkVariable<int>> bitsPerPlayer = new();
     private int playerCount;
+    private NetworkObject newObj;
 
     private void Start()
     {
@@ -38,12 +39,17 @@ public class GameManager : NetworkSingleton<GameManager>
         bitsPerPlayer.Add(playerID, new NetworkVariable<int>(0));
     }
 
-    public void RegisterStatsUI(ulong playerID)
+    [ServerRpc(RequireOwnership = false)]
+    public void RegisterStatsUIServerRpc(ulong playerID)
     {
-        PlayerStatPrefab statPrefab = Instantiate(m_playerStatPrefab, m_playerStatsPanel);
-        m_statsPerPlayer.Add(playerID, statPrefab);
+        Debug.Log("FIRING UI INSTANTI");
+        Transform statPrefab = Instantiate(m_playerStatPrefab, m_playerStatsPanel);
+        m_statsPerPlayer.Add(playerID, statPrefab.GetComponent<PlayerStatPrefab>());
         string name = $"Player {playerID + 1}";
-        statPrefab.SetName(name);
+        statPrefab.GetComponent<PlayerStatPrefab>().SetName(name);
+
+        newObj = statPrefab.GetComponent<NetworkObject>();
+        newObj.Spawn();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -134,5 +140,10 @@ public class GameManager : NetworkSingleton<GameManager>
     {
         playerCount++;
         CheckIfCanStartGame();
+    }
+
+    public void SpawnStatUi()
+    {
+        
     }
 }
