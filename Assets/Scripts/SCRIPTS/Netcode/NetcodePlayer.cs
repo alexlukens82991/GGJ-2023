@@ -10,18 +10,17 @@ public class NetcodePlayer : NetworkBehaviour
     public int Health;
     public int Bits;
     public int GunHeat;
-    public ulong  PlayerNumber;
+    public ulong PlayerNumber;
     public NetworkVariable<ulong> RoomId;
 
     [SerializeField] private GameObject[] models;
 
-    [Header("Cache")]
-    [SerializeField] private FirstPersonMovement firstPersonMovement;
+    [Header("Cache")] [SerializeField] private FirstPersonMovement firstPersonMovement;
     [SerializeField] private NetworkAnimator networkAnimator;
     [SerializeField] private NetworkTransform networkTransform;
     [SerializeField] private Transform spawnRoomPrefab;
     [SerializeField] private ulong roomID;
-    
+
     public Transform SpawnRoom;
     private BitCollector bitCollector;
     private static int playersConnected;
@@ -33,17 +32,14 @@ public class NetcodePlayer : NetworkBehaviour
             OnNetworkSpawn();
         }
     }
-    
+
     public override void OnNetworkSpawn()
     {
-        if (!IsHost)
-        {
-            var playerList = GameObject.FindObjectsOfType<NetcodePlayer>();
-            
-        }
         Debug.Log($"Spawned player {OwnerClientId}");
         RegisterPlayerClientRpc(OwnerClientId);
-
+        GameManager.Instance.CreateUI(OwnerClientId);
+        GameManager.Instance.RebuiltPlayerUIClientRpc(OwnerClientId);
+        
         if (IsHost)
             UpdateModelClientRpc();
 
@@ -63,14 +59,14 @@ public class NetcodePlayer : NetworkBehaviour
     {
         networkTransform.SetState(transform);
     }
-    
+
     private void OnClientConnect(ulong id)
     {
         ClientRpcParams clientRpcParams = new ClientRpcParams
         {
             Send = new ClientRpcSendParams
             {
-                TargetClientIds = new ulong[] { OwnerClientId }
+                TargetClientIds = new ulong[] {OwnerClientId}
             }
         };
         UpdateModelClientRpc();
@@ -108,7 +104,7 @@ public class NetcodePlayer : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void TellUsersAboutNewTagClientRpc (ulong id)
+    private void TellUsersAboutNewTagClientRpc(ulong id)
     {
         print("TELL NEW USERS ABOUT NEW TAG");
 
@@ -125,20 +121,25 @@ public class NetcodePlayer : NetworkBehaviour
             player.tag = "Player_" + player.GetComponent<NetcodePlayer>().OwnerClientId;
         }
     }
-    
+
     private void Start()
     {
         bitCollector = GetComponent<BitCollector>();
         NetworkManager.OnClientConnectedCallback += OnClientConnect;
-        StartCoroutine(LateStart());
+        //StartCoroutine(LateStart());
     }
 
     IEnumerator LateStart()
     {
+        var playerlist = FindObjectsOfType<NetcodePlayer>();
         yield return new WaitForSeconds(2f);
-        GameManager.Instance.RegisterStatsUIClientRpc(OwnerClientId);
+        
+        foreach (var player in playerlist)
+        {
+            GameManager.Instance.RegisterStatsUIClientRpc(player.OwnerClientId);
+        }
     }
-    
+
     [ServerRpc]
     public void SpawnRoomServerRpc(ulong id)
     {
@@ -162,7 +163,7 @@ public class NetcodePlayer : NetworkBehaviour
         {
             Send = new ClientRpcSendParams
             {
-                TargetClientIds = new ulong[] { id }
+                TargetClientIds = new ulong[] {id}
             }
         };
 
@@ -203,11 +204,10 @@ public class NetcodePlayer : NetworkBehaviour
                 if (netPlayer.SpawnRoom == null)
                     playersAreSet = false;
             }
+
             print("UPDATING ROOM REF");
             yield return new WaitForSeconds(1);
         } while (!playersAreSet);
-       
-        
     }
 
     public void UpdateTheFuckingRoom()
@@ -253,7 +253,7 @@ public class NetcodePlayer : NetworkBehaviour
 
         for (int i = 0; i < models.Length; i++)
         {
-            if (i.Equals((int)id))
+            if (i.Equals((int) id))
             {
                 activeModel = models[i];
 
@@ -285,7 +285,6 @@ public class NetcodePlayer : NetworkBehaviour
         }
         else
             SoundBank.Instance.PlayOneShot(5);
-
     }
 
     //private void OnCollisionEnter(Collision col)

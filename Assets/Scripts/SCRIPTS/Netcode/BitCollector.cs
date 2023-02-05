@@ -12,10 +12,9 @@ public class BitCollector : NetworkBehaviour
             CurrentBits++;
             SoundBank.Instance.PlayOneShot(2);
             NetworkObject bit = other.gameObject.GetComponent<NetworkObject>();
-            GameManager.Instance.SetPlayerBitsServerRpc(CurrentBits);
+            GameManager.Instance.SetPlayerScoreServerRpc(CurrentBits);
             DespawnBitServerRpc(bit.NetworkObjectId);
         }
-        
     }
 
     [ServerRpc(RequireOwnership = false)]
