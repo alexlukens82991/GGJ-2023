@@ -41,11 +41,6 @@ public class FirstPersonLook : NetworkBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-        
         // Get smooth velocity.
         if (!LockMouseLook)
         {

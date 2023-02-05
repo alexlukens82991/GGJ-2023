@@ -15,9 +15,8 @@ using System;
 public class NetworkManagerUI : MonoBehaviour
 {
     [Header("Cache")]
-    [SerializeField] private Button m_ServerBtn;
-    [SerializeField] private Button m_HostBtn;
-    [SerializeField] private Button m_ClientBtn;
+    [SerializeField] private Button m_CreateLobby;
+    [SerializeField] private Button m_JoinLobby;
     [SerializeField] private TMP_InputField m_JoinCodeInput;
     [SerializeField] private Button m_JoinBtn;
     [SerializeField] private CanvasGroup m_Cg;
@@ -25,13 +24,13 @@ public class NetworkManagerUI : MonoBehaviour
     [SerializeField] private GameObject m_JoinCodePanel;
     [SerializeField] private TextMeshProUGUI m_JoinCode;
 
+    bool serverJoined = false;
+    
     private void Awake()
     {
-        m_ServerBtn.onClick.AddListener(() => { NetworkManager.Singleton.StartServer(); ClosePanel(); });
-        m_HostBtn.onClick.AddListener(() => { CreateRelay(); ClosePanel(); });
-        m_ClientBtn.onClick.AddListener(() => { OpenJoinCode(); });
+        m_CreateLobby.onClick.AddListener(() => { CreateRelay(); ClosePanel(); });
+        m_JoinLobby.onClick.AddListener(() => { OpenJoinCode(); });
         m_JoinBtn.onClick.AddListener(() => { JoinRelay(m_JoinCodeInput.text); });
-
     }
 
     private async void Start()
@@ -54,7 +53,6 @@ public class NetworkManagerUI : MonoBehaviour
         m_JoinCodeCg.interactable = open;
     }
 
-    bool serverJoined = false;
     private void CloseJoinCodePanel(ulong id)
     {
         if (serverJoined)

@@ -1,4 +1,5 @@
-﻿using LukensUtils;
+﻿using System;
+using LukensUtils;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,6 +7,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class HackerComputer : Singleton<HackerComputer>
 {
@@ -20,6 +22,10 @@ public class HackerComputer : Singleton<HackerComputer>
     string[] expanded;
     private int currIndex;
     private bool hackComplete;
+    private bool gameActive;
+
+    private void OnEnable() => GameManager.OnGameStart += HandleActivateComputer;
+    private void OnDisable() => GameManager.OnGameStart -= HandleActivateComputer;
 
     private void Start()
     {
@@ -49,7 +55,8 @@ public class HackerComputer : Singleton<HackerComputer>
         float dist = Vector3.Distance(targetPlayer.transform.position, computer.position);
         if (Input.GetMouseButtonDown(0) && dist < 3)
         {
-            OpenHackerText(true);
+            if (gameActive)
+                OpenHackerText(true);
         }
     }
 
@@ -90,13 +97,19 @@ public class HackerComputer : Singleton<HackerComputer>
         computer = comp;
     }
 
+    private void HandleActivateComputer()
+    {
+        gameActive = true;
+    }
+    
     public void ResetHackerText()
     {
         currIndex = 0;
         hackerTxt.text = "█";
     }
 
-    private const string HACKER_TEXT = "ACCESS DATABASE { DB239158-235f } identity: NONE \n\n PURGE CACHE; \n\n ECHO PING_RATE () => DISSCONNECT_OBSERVERS; " +
+    private const string HACKER_TEXT =
+        "ACCESS DATABASE { DB239158-235f } identity: NONE \n\n PURGE CACHE; \n\n ECHO PING_RATE () => DISSCONNECT_OBSERVERS; " +
         "\n\n CONFIRM_ACCESS () => Grant_Access(); \n\n Grant_Access():\n 	\tfor(int i = 0; i <= DB_CONTENTS; i+++)\n 	\t{\n 		\t\tUSER[I].READ;\n 		" +
         "\t\tRETRIEVE USER DATA_ENCRYPTED\n 		\t\tDESTORY_TRACERS\n 	\t}\n \n REMOVE_TRACKER(Iso_248885) \n\n BEGIN_BRUTE_FORCE:\n 	" +
         "\tGenerate_KEY: Encryption: MD5 \n\n USE_KEYS: \n\n 543892758094275980472\n 798543289057409832759\n 897654380967580943705\n 689754389076543876668\n " +
