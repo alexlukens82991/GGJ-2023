@@ -5,9 +5,9 @@ public class BitCollector : NetworkBehaviour
 {
     public int CurrentBits;
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.collider.tag.Equals("Bit"))
+        if (other.tag.Equals("Bit"))
         {
             CurrentBits++;
 

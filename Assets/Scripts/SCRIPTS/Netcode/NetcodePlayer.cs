@@ -120,6 +120,8 @@ public class NetcodePlayer : NetworkBehaviour
 
     public void MoveBackToRoom()
     {
+        Health = 100;
+
         transform.position = spawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint();
         Debug.Log($"Moved player");
         GameManager.Instance.SetPlayerBitsServerRpc(bitCollector.CurrentBits);
@@ -160,5 +162,22 @@ public class NetcodePlayer : NetworkBehaviour
         Animator foundAnimator = activeModel.GetComponent<Animator>();
         networkAnimator.Animator = foundAnimator;
         firstPersonMovement.SetAnimator(foundAnimator);
+    }
+
+    private void OnCollisionEnter(Collision col)
+    {
+        if (col.collider.tag.Equals("PlayerBullet"))
+        {
+            Health -= 15;
+        }
+        else
+            print("HIT, but not bullet?");
+        if (Health <= 0)
+        {
+            // spawn bits
+            // kill
+            Bits = 0;
+            MoveBackToRoom();
+        }
     }
 }

@@ -1126,8 +1126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc4cbf4b8ed3a65439d805977f4be51f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CreateLobby: {fileID: 0}
-  m_JoinLobby: {fileID: 0}
+  m_CreateLobby: {fileID: 534184962777973660}
+  m_JoinLobby: {fileID: 534184962921752744}
   m_JoinCodeInput: {fileID: 534184962626638435}
   m_JoinBtn: {fileID: 534184963838711916}
   m_Cg: {fileID: 7352648572538579041}
