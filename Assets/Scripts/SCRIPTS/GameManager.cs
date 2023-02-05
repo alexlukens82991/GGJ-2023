@@ -5,6 +5,7 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 public class GameManager : NetworkSingleton<GameManager>
 {
@@ -19,7 +20,11 @@ public class GameManager : NetworkSingleton<GameManager>
 
     [SerializeField] private Button hostStartGameBtn;
 
-    private Dictionary<ulong, int> bitsPerPlayer = new();
+    [SerializeField] private RectTransform m_playerStatsPanel;
+    [SerializeField] private PlayerStatPrefab m_playerStatPrefab;
+
+    private Dictionary<ulong, PlayerStatPrefab> m_statsPerPlayer = new();
+    private Dictionary<ulong, NetworkVariable<int>> bitsPerPlayer = new();
     private int playerCount;
 
     private void Start()
@@ -30,17 +35,29 @@ public class GameManager : NetworkSingleton<GameManager>
 
     public void RegisterBitCount(ulong playerID)
     {
-        bitsPerPlayer.Add(playerID, 0);
+        bitsPerPlayer.Add(playerID, new NetworkVariable<int>(0));
+    }
+
+    public void RegisterStatsUI(ulong playerID)
+    {
+        PlayerStatPrefab statPrefab = Instantiate(m_playerStatPrefab, m_playerStatsPanel);
+        m_statsPerPlayer.Add(playerID, statPrefab);
+        string name = $"Player {playerID + 1}";
+        statPrefab.SetName(name);
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void SetPlayerBitsServerRpc(int numBits, ServerRpcParams serverRpcParams = default)
     {
-        bitsPerPlayer[serverRpcParams.Receive.SenderClientId] = numBits;
+        bitsPerPlayer[serverRpcParams.Receive.SenderClientId] = new NetworkVariable<int>(numBits);
 
         if (numBits >= winningBits)
         {
             NotifyClientsOfWinClientRpc(serverRpcParams.Receive.SenderClientId);
+        }
+        else
+        {
+            m_statsPerPlayer[serverRpcParams.Receive.SenderClientId].SetBits(bitsPerPlayer[serverRpcParams.Receive.SenderClientId]);
         }
     }
 
@@ -76,19 +93,16 @@ public class GameManager : NetworkSingleton<GameManager>
     {
         ClientStartGameClientRpc();
         hostStartGameBtn.gameObject.SetActive(false);
-        Debug.Log($"Calling from server RPC");
     }
 
     [ClientRpc]
     private void ClientStartGameClientRpc(ClientRpcParams clientRpcParams = default)
     {
         OnGameStart?.Invoke();
-        Debug.Log($"Calling from Client RPC");
     }
     
     private IEnumerator RestartGame()
     {
-        Debug.Log("CALLING COROUTINE");
         yield return new WaitForSeconds(2f);
         ResetGamePlayServerRpc();
     }
@@ -96,8 +110,6 @@ public class GameManager : NetworkSingleton<GameManager>
     [ServerRpc]
     private void ResetGamePlayServerRpc(ServerRpcParams serverRpcParams = default)
     {
-        Debug.Log("CALLING RESTART SERVER RPC");
-        
         foreach (var client in NetworkManager.ConnectedClients)
         {
             var spawnPoint = client.Value.PlayerObject.GetComponent<NetcodePlayer>().SpawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint();
@@ -111,7 +123,6 @@ public class GameManager : NetworkSingleton<GameManager>
     [ClientRpc]
     private void FullResetClientRpc(ClientRpcParams clientRpcParams = default)
     {
-        Debug.Log("CALLING RESTART CLIENT RPC");
         HackerComputer.Instance.Reset();
         pauseManager.Resume();
         OnGameRestart?.Invoke();
