@@ -164,14 +164,9 @@ public class NetcodePlayer : NetworkBehaviour
         firstPersonMovement.SetAnimator(foundAnimator);
     }
 
-    private void OnCollisionEnter(Collision col)
+    public void DamagePlayer()
     {
-        if (col.collider.tag.Equals("PlayerBullet"))
-        {
-            Health -= 15;
-        }
-        else
-            print("HIT, but not bullet?");
+        Health -= 15;
         if (Health <= 0)
         {
             // spawn bits
@@ -180,4 +175,21 @@ public class NetcodePlayer : NetworkBehaviour
             MoveBackToRoom();
         }
     }
+
+    //private void OnCollisionEnter(Collision col)
+    //{
+    //    if (col.collider.tag.Equals("PlayerBullet"))
+    //    {
+    //        Health -= 15;
+    //    }
+    //    else
+    //        print("HIT, but not bullet?");
+    //    if (Health <= 0)
+    //    {
+    //        // spawn bits
+    //        // kill
+    //        Bits = 0;
+    //        MoveBackToRoom();
+    //    }
+    //}
 }

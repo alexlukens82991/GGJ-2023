@@ -9,20 +9,26 @@ public class PlayerBullet : NetworkBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (!IsServer) return;
-        //StartCoroutine(EndOfFrameExecute());
-        Destroy(gameObject);
-    }
 
-    IEnumerator EndOfFrameExecute()
-    {
-        yield return new WaitUntil(() => netObj.IsSpawned);
-        netObj.Despawn();
-    }
+        if (collision.collider.tag == "Player")
+        {
+            NetcodePlayer foundPlayer = collision.gameObject.GetComponent<NetcodePlayer>();
 
-
-    [ServerRpc]
-    private void DespawnServerRpc()
-    {
-        
+            if (foundPlayer != null)
+            {
+                if (OwnerClientId != foundPlayer.OwnerClientId)
+                {
+                    foundPlayer.DamagePlayer();
+                }
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }
