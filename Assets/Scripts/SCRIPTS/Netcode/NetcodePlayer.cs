@@ -188,7 +188,7 @@ public class NetcodePlayer : NetworkBehaviour
     public void UpdateTheFuckingRoom()
     {
         NetworkObject netObj = NetworkManager.SpawnManager.SpawnedObjects[RoomId.Value];
-        SpawnRoom = netObj.transform;
+        spawnRoom = netObj.transform;
     }
 
     public void MovePlayerToRoom(ulong room)
