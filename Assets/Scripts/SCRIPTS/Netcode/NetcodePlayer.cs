@@ -17,12 +17,12 @@ public class NetcodePlayer : NetworkBehaviour
     [SerializeField] private FirstPersonMovement firstPersonMovement;
     [SerializeField] private NetworkAnimator networkAnimator;
     [SerializeField] private NetworkTransform networkTransform;
-    [SerializeField] private Transform spawnRoom;
     [SerializeField] private Transform spawnRoomPrefab;
     [SerializeField] private ulong roomID;
+    
+    public Transform SpawnRoom;
     private BitCollector bitCollector;
     private static int playersConnected;
-
 
     public override void OnNetworkSpawn()
     {
@@ -40,6 +40,11 @@ public class NetcodePlayer : NetworkBehaviour
         SpawnRoomServerRpc(OwnerClientId);
     }
 
+    public void SetTransform(Vector3 transform)
+    {
+        networkTransform.SetState(transform);
+    }
+    
     private void OnClientConnect(ulong id)
     {
         ClientRpcParams clientRpcParams = new ClientRpcParams
@@ -81,7 +86,7 @@ public class NetcodePlayer : NetworkBehaviour
         NetworkObject foundObj = newItem.GetComponent<NetworkObject>();
         foundObj.Spawn();
 
-        spawnRoom = newItem;
+        SpawnRoom = newItem;
 
         // return to client that requested it
         ClientRpcParams clientRpcParams = new ClientRpcParams
@@ -111,18 +116,17 @@ public class NetcodePlayer : NetworkBehaviour
 
     public void MovePlayerToRoom(ulong room)
     {
-        spawnRoom = NetworkManager.SpawnManager.SpawnedObjects[room].transform;
-        networkTransform.SetState(spawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint());
+        SpawnRoom = NetworkManager.SpawnManager.SpawnedObjects[room].transform;
+        networkTransform.SetState(SpawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint());
         HackerComputer.Instance.SetTargetPlayer(networkTransform);
-        HackerComputer.Instance.SetComputer(spawnRoom.GetComponent<SpawnRoom>().GetComputer());
+        HackerComputer.Instance.SetComputer(SpawnRoom.GetComponent<SpawnRoom>().GetComputer());
     }
-    
 
     public void MoveBackToRoom()
     {
         Health = 100;
         HackerComputer.Instance.Reset();
-        transform.position = spawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint();
+        transform.position = SpawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint();
         Debug.Log($"Moved player");
         GameManager.Instance.SetPlayerBitsServerRpc(bitCollector.CurrentBits);
     }

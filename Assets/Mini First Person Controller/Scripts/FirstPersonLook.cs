@@ -23,6 +23,13 @@ public class FirstPersonLook : NetworkBehaviour
     private void OnEnable()
     {
         GameManager.OnGameEnd += HandleLockMouseLook;
+        GameManager.OnGameRestart += HandleUnLockMouseLook;
+    }
+    
+    private void OnDisable()
+    {
+        GameManager.OnGameEnd += HandleLockMouseLook;
+        GameManager.OnGameRestart += HandleUnLockMouseLook;
     }
 
     void Start()
@@ -59,5 +66,10 @@ public class FirstPersonLook : NetworkBehaviour
     private void HandleLockMouseLook()
     {
         LockMouseLook = true;
+    }
+    
+    private void HandleUnLockMouseLook()
+    {
+        LockMouseLook = false;
     }
 }
