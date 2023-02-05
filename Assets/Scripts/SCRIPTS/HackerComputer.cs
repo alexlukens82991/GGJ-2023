@@ -100,6 +100,7 @@ public class HackerComputer : Singleton<HackerComputer>
     {
         HackComplete = true;
 
+
         StartCoroutine(SendToBattleFieldRoutine());
     }
 
