@@ -56,6 +56,7 @@ public class NetcodePlayer : NetworkBehaviour
     private void RegisterPlayerClientRpc()
     {
         GameManager.Instance.RegisterBitCount(OwnerClientId);
+        GameManager.Instance.UpdatePlayerCount();
     }
 
     private void Start()
