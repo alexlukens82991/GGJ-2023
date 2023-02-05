@@ -10,6 +10,7 @@ public class NetcodePlayer : NetworkBehaviour
     public int Health;
     public int Bits;
     public int GunHeat;
+    public ulong  PlayerNumber;
     public NetworkVariable<ulong> RoomId;
 
     [SerializeField] private GameObject[] models;
@@ -27,6 +28,7 @@ public class NetcodePlayer : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        PlayerNumber = NetworkManager.ConnectedClients[OwnerClientId].ClientId;
         RegisterPlayerClientRpc(OwnerClientId);
 
         if (IsHost)
@@ -74,9 +76,11 @@ public class NetcodePlayer : NetworkBehaviour
     [ClientRpc]
     private void RegisterPlayerClientRpc(ulong id)
     {
-        GameManager.Instance.RegisterBitCount(OwnerClientId);
         GameManager.Instance.UpdatePlayerCount();
 
+        GameManager.Instance.RegisterBitCount(OwnerClientId);
+        GameManager.Instance.RegisterStatsUI(OwnerClientId);
+        Debug.Log($"Registered player");
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -89,7 +93,6 @@ public class NetcodePlayer : NetworkBehaviour
         client.PlayerObject.gameObject.tag = "Player_" + id;
 
         TellUsersAboutNewTagClientRpc(id);
-
     }
 
     [ClientRpc]
@@ -201,10 +204,8 @@ public class NetcodePlayer : NetworkBehaviour
         Health = 100;
         HackerComputer.Instance.Reset();
         transform.position = SpawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint();
-        Debug.Log($"Moved player");
         GameManager.Instance.SetPlayerBitsServerRpc(bitCollector.CurrentBits);
     }
-
 
     public void SelectModel()
     {
