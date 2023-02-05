@@ -2811,6 +2811,46 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4591959505113044542}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1244706133 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3447212821074122218, guid: ed890384e39131948a5e70e1ffac848d,
+    type: 3}
+  m_PrefabInstance: {fileID: 393870042}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1244706137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244706133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 1244706138}
+--- !u!95 &1244706138
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244706133}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 992c4993d77bf154a9afc863246b43f4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &1280586698
 GameObject:
   m_ObjectHideFlags: 0
@@ -4295,6 +4335,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1723909851}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1728260316 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4591959505585337189, guid: 806ce18551ac673469c1522f8802775d,
+    type: 3}
+  m_PrefabInstance: {fileID: 4591959505113044542}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1730566301
 GameObject:
   m_ObjectHideFlags: 0
@@ -5308,6 +5360,11 @@ PrefabInstance:
       propertyPath: pauseManager
       value: 
       objectReference: {fileID: 716875934}
+    - target: {fileID: 2594153531907335279, guid: d84de1bca76f6374bad68d2db16651dd,
+        type: 3}
+      propertyPath: playerWinText
+      value: 
+      objectReference: {fileID: 1728260316}
     - target: {fileID: 2594153531907335279, guid: d84de1bca76f6374bad68d2db16651dd,
         type: 3}
       propertyPath: playerWinPanel
