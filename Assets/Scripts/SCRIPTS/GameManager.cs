@@ -60,10 +60,15 @@ public class GameManager : NetworkSingleton<GameManager>
         {
             NotifyClientsOfWinClientRpc(serverRpcParams.Receive.SenderClientId);
         }
-        else
-        {
-            m_statsPerPlayer[serverRpcParams.Receive.SenderClientId].SetBits(bitsPerPlayer[serverRpcParams.Receive.SenderClientId]);
-        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetPlayerScoreServerRpc(int numBits, ServerRpcParams serverRpcParams = default)
+    {
+        bitsPerPlayer[serverRpcParams.Receive.SenderClientId] = new NetworkVariable<int>(numBits);
+
+        m_statsPerPlayer[serverRpcParams.Receive.SenderClientId]
+            .SetBits(bitsPerPlayer[serverRpcParams.Receive.SenderClientId]);
     }
 
     [ClientRpc]
@@ -119,10 +124,11 @@ public class GameManager : NetworkSingleton<GameManager>
     {
         foreach (var client in NetworkManager.ConnectedClients)
         {
-            var spawnPoint = client.Value.PlayerObject.GetComponent<NetcodePlayer>().SpawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint();
+            var spawnPoint = client.Value.PlayerObject.GetComponent<NetcodePlayer>().SpawnRoom.GetComponent<SpawnRoom>()
+                .GetSpawnPoint();
             client.Value.PlayerObject.GetComponent<NetcodePlayer>().SetTransform(spawnPoint);
         }
-        
+
         CheckIfCanStartGame();
         FullResetClientRpc();
     }
@@ -135,7 +141,34 @@ public class GameManager : NetworkSingleton<GameManager>
         OnGameRestart?.Invoke();
         playerWinPanel.SetActive(false);
     }
-    
+
+    public void CreateUI(ulong playerID)
+    {
+        var playerlist = FindObjectsOfType<NetcodePlayer>();
+        m_statsPerPlayer.Clear();
+        
+        foreach (Transform transform in m_playerStatsPanel)
+        {
+            Destroy(transform.gameObject);
+        }
+        
+        foreach (var player in playerlist)
+        {
+            Transform statPrefab = Instantiate(m_playerStatPrefab, m_playerStatsPanel);
+            m_statsPerPlayer.Add(player.OwnerClientId, statPrefab.GetComponent<PlayerStatPrefab>());
+            string name = $"Player {player.OwnerClientId + 1}";
+            statPrefab.GetComponent<PlayerStatPrefab>().SetName(name);
+        }
+    }
+
+    [ClientRpc]
+    public void RebuiltPlayerUIClientRpc(ulong playerID)
+    {
+        if (OwnerClientId == playerID) return;
+
+        CreateUI(playerID);
+    }
+
     public void UpdatePlayerCount()
     {
         playerCount++;
@@ -144,6 +177,5 @@ public class GameManager : NetworkSingleton<GameManager>
 
     public void SpawnStatUi()
     {
-        
     }
 }

@@ -29,7 +29,5 @@ public class PlayerItemSpawner : NetworkBehaviour
 
             NetworkSpawner.Instance.SpawnItemServerRpc(0, spawnItemData, OwnerClientId);
         }
-
-
     }
 }
