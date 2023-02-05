@@ -65,7 +65,7 @@ public class DumbassEnemy : NetworkBehaviour
     }
 
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void SpawnBitBundleServerRpc()
     {
         Vector3 spawnPoint = transform.position + (Vector3.up * 2);

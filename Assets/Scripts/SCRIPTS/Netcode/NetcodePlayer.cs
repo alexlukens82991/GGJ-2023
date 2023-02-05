@@ -28,7 +28,7 @@ public class NetcodePlayer : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        PlayerNumber = NetworkManager.ConnectedClients[OwnerClientId].ClientId;
+        //PlayerNumber = NetworkManager.ConnectedClients[OwnerClientId].ClientId;
         RegisterPlayerClientRpc(OwnerClientId);
 
         if (IsHost)
@@ -199,7 +199,7 @@ public class NetcodePlayer : NetworkBehaviour
         print("ATTEMPTING TO UPDATE ROOM.");
         print("Room status: " + SpawnRoom == null);
         NetworkObject netObj = NetworkManager.SpawnManager.SpawnedObjects[RoomId.Value];
-        spawnRoom = netObj.transform;
+        SpawnRoom = netObj.transform;
     }
 
     public void MovePlayerToRoom(ulong room)
