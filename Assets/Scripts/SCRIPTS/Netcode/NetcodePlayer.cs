@@ -11,29 +11,51 @@ public class NetcodePlayer : NetworkBehaviour
     public int Bits;
     public int GunHeat;
 
+    [SerializeField] private GameObject[] models;
+
     [Header("Cache")]
+    [SerializeField] private FirstPersonMovement firstPersonMovement;
+    [SerializeField] private NetworkAnimator networkAnimator;
     [SerializeField] private NetworkTransform networkTransform;
     [SerializeField] private Transform spawnRoom;
     [SerializeField] private Transform spawnRoomPrefab;
     [SerializeField] private ulong roomID;
     private BitCollector bitCollector;
+    private static int playersConnected;
+
 
     public override void OnNetworkSpawn()
     {
         RegisterPlayerClientRpc();
-        if (!IsOwner) return;
 
+        if (IsServer)
+            UpdateModelClientRpc();
+
+        if (!IsOwner) return;
+        playersConnected++;
         // Initialize stats
         Health = 100;
 
         // Spawn in new player room
         SpawnRoomServerRpc(OwnerClientId);
 
-        // move new player to room
+        
 
-        // Update gamemanager
+
     }
-    
+
+    private void OnClientConnect(ulong id)
+    {
+        ClientRpcParams clientRpcParams = new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new ulong[] { OwnerClientId }
+            }
+        };
+        UpdateModelClientRpc(clientRpcParams);
+    }
+
     [ClientRpc]
     private void RegisterPlayerClientRpc()
     {
@@ -43,6 +65,7 @@ public class NetcodePlayer : NetworkBehaviour
     private void Start()
     {
         bitCollector = GetComponent<BitCollector>();
+        NetworkManager.OnClientConnectedCallback += OnClientConnect;
     }
 
     [ServerRpc]
@@ -83,6 +106,12 @@ public class NetcodePlayer : NetworkBehaviour
         MovePlayerToRoom(room);
     }
 
+    [ClientRpc]
+    private void UpdateModelClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        SelectModel();
+    }
+
     public void MovePlayerToRoom(ulong room)
     {
         spawnRoom = NetworkManager.SpawnManager.SpawnedObjects[room].transform;
@@ -97,5 +126,42 @@ public class NetcodePlayer : NetworkBehaviour
         transform.position = spawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint();
         Debug.Log($"Moved player");
         GameManager.Instance.SetPlayerBitsServerRpc(bitCollector.CurrentBits);
+    }
+
+
+    public void SelectModel()
+    {
+        ulong id = OwnerClientId;
+
+        if (id >= 4)
+        {
+            do
+            {
+                id -= 4;
+            } while (OwnerClientId >= 4);
+        }
+
+        GameObject activeModel = null;
+
+        print("PLAYERS CONNECTED: " + id);
+
+        for (int i = 0; i < models.Length; i++)
+        {
+            if (i.Equals((int)id))
+            {
+                activeModel = models[i];
+
+                activeModel.SetActive(true);
+            }
+            else
+            {
+                print("FAILED: " + i + " | " + id);
+                models[i].SetActive(false);
+            }
+        }
+
+        Animator foundAnimator = activeModel.GetComponent<Animator>();
+        networkAnimator.Animator = foundAnimator;
+        firstPersonMovement.SetAnimator(foundAnimator);
     }
 }

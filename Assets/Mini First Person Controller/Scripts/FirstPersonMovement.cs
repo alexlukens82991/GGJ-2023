@@ -55,4 +55,9 @@ public class FirstPersonMovement : NetworkBehaviour
         // Apply movement.
         rigidbody.velocity = transform.rotation * new Vector3(targetVelocity.x, rigidbody.velocity.y, targetVelocity.y);
     }
+
+    public void SetAnimator(Animator anim)
+    {
+        animator = anim;
+    }
 }
