@@ -6,11 +6,11 @@ using UnityEngine;
 public class PlayerBullet : NetworkBehaviour
 {
     [SerializeField] private NetworkObject netObj;
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
         if (!IsServer) return;
 
-        if (collision.collider.tag == "Player")
+        if (collision.tag == "Player")
         {
             NetcodePlayer foundPlayer = collision.gameObject.GetComponent<NetcodePlayer>();
 
@@ -23,12 +23,14 @@ public class PlayerBullet : NetworkBehaviour
             }
             else
             {
-                Destroy(gameObject);
             }
         }
-        else
+        else if (collision.tag == "DumbassEnemy")
         {
-            Destroy(gameObject);
+            collision.GetComponentInParent<DumbassEnemy>().Damage();
         }
+
+        Destroy(gameObject);
+
     }
 }

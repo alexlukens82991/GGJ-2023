@@ -39,14 +39,11 @@ public class DumbassEnemy : NetworkBehaviour
         } while (Alive);
     }
 
-    private void OnCollisionEnter(Collision col)
+    public void Damage()
     {
-        if (col.collider.tag.Equals("PlayerBullet"))
-        {
-            Health -= 100;
-        }
-        else
-            print("HIT, but not bullet?");
+        print("DAMAGED ENEMY");
+        Health -= 50;
+
         if (Health <= 0)
         {
             // spawn bits

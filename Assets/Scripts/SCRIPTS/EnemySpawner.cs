@@ -11,9 +11,7 @@ public class EnemySpawner : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        print("ON NETWORK SPAWN");
         if (!IsServer) return;
-        print("DID NOT RETURN OUT");
 
         foreach (Transform transform in spawnPointsParent)
         {
