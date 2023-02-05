@@ -28,7 +28,7 @@ public class NetcodePlayer : NetworkBehaviour
     {
         RegisterPlayerClientRpc();
 
-        if (IsServer)
+        if (IsHost)
             UpdateModelClientRpc();
 
         if (!IsOwner) return;
@@ -49,7 +49,7 @@ public class NetcodePlayer : NetworkBehaviour
                 TargetClientIds = new ulong[] { OwnerClientId }
             }
         };
-        UpdateModelClientRpc(clientRpcParams);
+        UpdateModelClientRpc();
     }
 
     [ClientRpc]
@@ -104,7 +104,7 @@ public class NetcodePlayer : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void UpdateModelClientRpc(ClientRpcParams clientRpcParams = default)
+    private void UpdateModelClientRpc()
     {
         SelectModel();
     }
