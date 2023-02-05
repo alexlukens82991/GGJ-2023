@@ -10,6 +10,7 @@ public class NetcodePlayer : NetworkBehaviour
     public int Health;
     public int Bits;
     public int GunHeat;
+    public NetworkVariable<ulong> RoomId;
 
     [SerializeField] private GameObject[] models;
 
@@ -26,7 +27,7 @@ public class NetcodePlayer : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        RegisterPlayerClientRpc();
+        RegisterPlayerClientRpc(OwnerClientId);
 
         if (IsHost)
             UpdateModelClientRpc();
@@ -35,6 +36,9 @@ public class NetcodePlayer : NetworkBehaviour
         playersConnected++;
         // Initialize stats
         Health = 100;
+
+        StartCoroutine(FuckingJustWait());
+
 
         // Spawn in new player room
         SpawnRoomServerRpc(OwnerClientId);
@@ -50,14 +54,58 @@ public class NetcodePlayer : NetworkBehaviour
             }
         };
         UpdateModelClientRpc();
+        UpdateSpawnedUserTagServerRpc(id);
     }
 
+    IEnumerator FuckingJustWait()
+    {
+        print("WAITING!!!!");
+        yield return new WaitForSeconds(2);
+        print("FIRING UPDATE");
+        UpdateRoomRef();
+    }
+
+
     [ClientRpc]
-    private void RegisterPlayerClientRpc()
+    private void RegisterPlayerClientRpc(ulong id)
     {
         GameManager.Instance.RegisterBitCount(OwnerClientId);
         GameManager.Instance.UpdatePlayerCount();
+
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void UpdateSpawnedUserTagServerRpc(ulong id)
+    {
+        print("UpdateSpawnedUserTagServerRpc");
+
+        NetworkClient client = NetworkManager.ConnectedClients[id];
+
+        client.PlayerObject.gameObject.tag = "Player_" + id;
+
+        TellUsersAboutNewTagClientRpc(id);
+
+    }
+
+    [ClientRpc]
+    private void TellUsersAboutNewTagClientRpc (ulong id)
+    {
+        print("TELL NEW USERS ABOUT NEW TAG");
+
+        GameObject[] foundPlayers = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (GameObject player in foundPlayers)
+        {
+            NetcodePlayer netPlayer = player.GetComponent<NetcodePlayer>();
+
+            if (netPlayer == null)
+                continue;
+
+            Debug.Log("FOUND PLAYER!", player);
+            player.tag = "Player_" + player.GetComponent<NetcodePlayer>().OwnerClientId;
+        }
+    }
+
 
     private void Start()
     {
@@ -92,9 +140,9 @@ public class NetcodePlayer : NetworkBehaviour
             }
         };
 
-        roomID = foundObj.NetworkObjectId;
+        RoomId.Value = foundObj.NetworkObjectId;
 
-        ReturnRoomToClientClientRpc(roomID, clientRpcParams);
+        ReturnRoomToClientClientRpc(RoomId.Value, clientRpcParams);
     }
 
     [ClientRpc]
@@ -107,6 +155,32 @@ public class NetcodePlayer : NetworkBehaviour
     private void UpdateModelClientRpc()
     {
         SelectModel();
+    }
+
+    private void UpdateRoomRef()
+    {
+
+        GameObject[] foundPlayers = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (GameObject player in foundPlayers)
+        {
+            NetcodePlayer netPlayer = player.GetComponent<NetcodePlayer>();
+
+            if (netPlayer == null)
+                continue;
+
+            netPlayer.UpdateTheFuckingRoom();
+
+
+        }
+        print("UPDATING ROOM REF");
+        
+    }
+
+    public void UpdateTheFuckingRoom()
+    {
+        NetworkObject netObj = NetworkManager.SpawnManager.SpawnedObjects[RoomId.Value];
+        spawnRoom = netObj.transform;
     }
 
     public void MovePlayerToRoom(ulong room)

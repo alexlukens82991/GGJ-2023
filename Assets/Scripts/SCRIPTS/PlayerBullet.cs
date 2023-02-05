@@ -8,29 +8,47 @@ public class PlayerBullet : NetworkBehaviour
     [SerializeField] private NetworkObject netObj;
     private void OnTriggerEnter(Collider collision)
     {
-        if (!IsServer) return;
+        //if (!IsServer) return;
+
+        print("COLLIDED WITH: " + collision.tag);
 
         if (collision.tag == "Player")
         {
-            NetcodePlayer foundPlayer = collision.gameObject.GetComponent<NetcodePlayer>();
+            print("PLAYER COLLISION DETECTED");
+            NetcodePlayer foundPlayer = collision.gameObject.GetComponentInParent<NetcodePlayer>();
 
             if (foundPlayer != null)
             {
-                if (OwnerClientId != foundPlayer.OwnerClientId)
+                string[] expandedThisTag = transform.tag.Split('_');
+                string[] expandedPlayerHitTag = foundPlayer.transform.tag.Split('_');
+                if (expandedThisTag[1] != expandedPlayerHitTag[1])
                 {
                     foundPlayer.DamagePlayer();
+                }
+                else
+                {
+                    print("OWNER ID MATCHED OWNER WHO SPAWNED BULLET. IGNORING.");
                 }
             }
             else
             {
+                print("FOUND PLAYER NULL");
             }
+
         }
         else if (collision.tag == "DumbassEnemy")
         {
             collision.GetComponentInParent<DumbassEnemy>().Damage();
         }
 
-        Destroy(gameObject);
+        if (IsOwner)
+            DestroyServerRpc();
 
+    }
+
+    [ServerRpc]
+    private void DestroyServerRpc()
+    {
+        Destroy(gameObject);
     }
 }
