@@ -21,7 +21,7 @@ public class HackerComputer : Singleton<HackerComputer>
 
     string[] expanded;
     private int currIndex;
-    private bool hackComplete;
+    public bool HackComplete;
     private bool gameActive;
 
     private void OnEnable() => GameManager.OnGameStart += HandleActivateComputer;
@@ -40,7 +40,7 @@ public class HackerComputer : Singleton<HackerComputer>
 
     private void Update()
     {
-        if (hackComplete) return;
+        if (HackComplete) return;
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
             TriggerHackSuccess();
@@ -81,7 +81,7 @@ public class HackerComputer : Singleton<HackerComputer>
 
     private void TriggerHackSuccess()
     {
-        hackComplete = true;
+        HackComplete = true;
 
         targetPlayer.SetState(spawnPoints[Random.Range(0, spawnPoints.Count)]); // coroutine for effects
         OpenHackerText(false);
