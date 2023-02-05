@@ -12,7 +12,7 @@ public class PlayerItemSpawner : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetMouseButtonDown(0))
         {
             SpawnItemData spawnItemData = new();
 
