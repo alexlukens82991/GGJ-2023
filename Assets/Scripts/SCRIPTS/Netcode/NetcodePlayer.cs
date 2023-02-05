@@ -121,7 +121,7 @@ public class NetcodePlayer : NetworkBehaviour
     public void MoveBackToRoom()
     {
         Health = 100;
-        HackerComputer.Instance.HackComplete = false;
+        HackerComputer.Instance.Reset();
         transform.position = spawnRoom.GetComponent<SpawnRoom>().GetSpawnPoint();
         Debug.Log($"Moved player");
         GameManager.Instance.SetPlayerBitsServerRpc(bitCollector.CurrentBits);

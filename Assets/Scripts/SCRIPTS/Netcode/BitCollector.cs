@@ -17,7 +17,7 @@ public class BitCollector : NetworkBehaviour
         
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void DespawnBitServerRpc(ulong id)
     {
         NetworkObject found = NetworkManager.SpawnManager.SpawnedObjects[id];

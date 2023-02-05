@@ -60,6 +60,13 @@ public class HackerComputer : Singleton<HackerComputer>
         }
     }
 
+    public void Reset()
+    {
+        HackComplete = false;
+        currIndex = 0;
+        hackerTxt.text = "█";
+    }
+
     private void OpenHackerText(bool open)
     {
         LukensUtilities.ToggleCanvasGroup(cg, open);
