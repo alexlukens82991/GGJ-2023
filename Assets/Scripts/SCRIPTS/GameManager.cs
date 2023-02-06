@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -46,9 +47,6 @@ public class GameManager : NetworkSingleton<GameManager>
         m_statsPerPlayer.Add(playerID, statPrefab.GetComponent<PlayerStatPrefab>());
         string name = $"Player {playerID + 1}";
         statPrefab.GetComponent<PlayerStatPrefab>().SetName(name);
-
-        newObj = statPrefab.GetComponent<NetworkObject>();
-        //newObj.Spawn();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -67,8 +65,15 @@ public class GameManager : NetworkSingleton<GameManager>
     {
         bitsPerPlayer[serverRpcParams.Receive.SenderClientId] = new NetworkVariable<int>(numBits);
 
-        m_statsPerPlayer[serverRpcParams.Receive.SenderClientId]
-            .SetBits(bitsPerPlayer[serverRpcParams.Receive.SenderClientId]);
+        var playerNum = serverRpcParams.Receive.SenderClientId;
+        UpdatePlayerBitsClientRpc(playerNum);
+    }
+
+    [ClientRpc]
+    private void UpdatePlayerBitsClientRpc(ulong playerNum)
+    {
+        m_statsPerPlayer[playerNum]
+            .SetBits(bitsPerPlayer[playerNum]);
     }
 
     [ClientRpc]
@@ -144,7 +149,9 @@ public class GameManager : NetworkSingleton<GameManager>
 
     public void CreateUI(ulong playerID)
     {
-        var playerlist = FindObjectsOfType<NetcodePlayer>();
+        List<NetcodePlayer> playerlist = FindObjectsOfType<NetcodePlayer>().ToList();
+        playerlist.OrderByDescending(n => n.OwnerClientId);
+        
         m_statsPerPlayer.Clear();
         
         foreach (Transform transform in m_playerStatsPanel)

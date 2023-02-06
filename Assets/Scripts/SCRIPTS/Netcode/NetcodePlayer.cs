@@ -82,7 +82,6 @@ public class NetcodePlayer : NetworkBehaviour
         } while (SpawnRoom == null);
     }
 
-
     [ClientRpc]
     private void RegisterPlayerClientRpc(ulong id)
     {
